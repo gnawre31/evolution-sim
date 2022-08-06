@@ -4,12 +4,13 @@ import Node from "./node";
 export default class Grid {
   height;
   width;
+  turn = 0;
   nodes = [];
   constructor(height, width) {
     this.height = height;
     this.width = width;
     this.generateNodes();
-    this.generateFood();
+    this.generateFood(3);
   }
 
   // generates height x width number of nodes and stores in this.nodes array
@@ -35,5 +36,13 @@ export default class Grid {
       randomNode.currEl = new Food(randomNode.x, randomNode.y);
       count++;
     }
+  }
+
+  nextTurn() {
+    this.turn++;
+    this.nodes.forEach((n) => n.advanceTurn());
+    console.log(this.turn);
+
+    // return this;
   }
 }

@@ -1,36 +1,61 @@
 import React, { useState } from "react";
-import Grid from "./grid";
+import {
+  usePack,
+  newSim,
+  generateFood,
+  nextTurn,
+  generateCreatures,
+} from "./context/SimState";
 
 const Sim = () => {
-  const [grid, setGrid] = useState(null);
+  const [simState, simDispatch] = usePack();
+  const { running, turn, height, width, nodes, food, creatures } = simState;
+
+  // generate new grid
+
   const newGrid = () => {
-    const grid = new Grid(10, 10);
-    setGrid(grid);
+    newSim(simDispatch, 10, 10);
   };
 
-  const extraGridStyling =
-    grid != null
-      ? {
-          gridTemplateColumns: `repeat(${grid.width},1fr)`,
-          gridTemplateRows: `repeat(${grid.height},1fr)`,
-        }
-      : {};
+  const newFood = () => {
+    generateFood(simDispatch, height, width, nodes);
+  };
+  const newTurn = () => {
+    nextTurn(simDispatch, nodes);
+  };
+
+  const newCreature = () => {
+    generateCreatures(simDispatch, nodes);
+  };
+
+  const extraGridStyling = running
+    ? {
+        gridTemplateColumns: `repeat(${width},1fr)`,
+        gridTemplateRows: `repeat(${height},1fr)`,
+      }
+    : {};
 
   return (
     <div className="container flex flex-col">
       <div onClick={newGrid}>New Grid</div>
-      <div className="flex flex-row">
-        {/* <div>x:{grid && grid.width}, </div> */}
-        {/* <div>y: {grid && grid.height}</div> */}
+      <div onClick={newFood}>New Food</div>
+      <div onClick={newTurn}>New Turn</div>
+      <div onClick={newCreature}>New Creatures</div>
+      <div>
+        {food.current} / {food.total} food
       </div>
+      <div>
+        {creatures.current} / {creatures.total} creatures
+      </div>
+      <div className="flex flex-row"></div>
 
       <div
-        className={`align-items ${grid != null ? "grid" : ""} `}
+        className={`align-items ${running ? "grid" : ""} `}
         style={extraGridStyling}
       >
-        {grid != null &&
-          grid.nodes.map((n, idx) => (
-            <div key={idx}>{n.currEl && n.currEl.type}</div>
+        {running &&
+          nodes.map((n, idx) => (
+            <div key={idx}>{n.occupied && n.current.type}</div>
           ))}
       </div>
     </div>
