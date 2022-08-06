@@ -8,20 +8,22 @@ const food = "FOOD";
 // generate a list of nodes and plot on a 2D plane
 const generateNodes = (height, width) => {
   let nodes = [];
-  for (let i = 0; i < height; i++) {
-    for (let j = 0; j < width; j++) {
-      nodes.push({
+  for (let i = 0; i < width; i++) {
+    let row = [];
+    for (let j = 0; j < height; j++) {
+      row.push({
         x: i,
         y: j,
         occupied: false,
         current: null,
       });
     }
+    nodes.push(row);
   }
   return nodes;
 };
 
-export const generateFood = (
+const generateFood = (
   dispatch,
   height,
   width,
@@ -30,18 +32,21 @@ export const generateFood = (
   amount = (height * width) / 50
 ) => {
   let count = 0;
-  let nodeIndex;
+  let x;
+  let y;
+  amount = Math.floor(Math.random() * amount + 1);
   while (count < amount) {
-    nodeIndex = Math.floor(Math.random() * height * width);
-    if (nodes[nodeIndex].occupied) {
+    x = Math.floor(Math.random() * width);
+    y = Math.floor(Math.random() * height);
+    if (nodes[x][y].occupied) {
       continue;
     }
-    nodes[nodeIndex].occupied = true;
+    nodes[x][y].occupied = true;
     const newFood = {
       type: food,
       duration: Math.floor(Math.random() * (duration + 1) + 1),
     };
-    nodes[nodeIndex].current = newFood;
+    nodes[x][y].current = newFood;
     count++;
   }
   dispatch({ type: "NEW_FOOD", payload: { nodes, count } });
@@ -50,20 +55,20 @@ export const generateFood = (
 const getCurrentCounts = (nodes) => {
   let foodCount = 0;
   let creatureCount = 0;
-  nodes
-    .filter((n) => n.occupied)
-    .forEach((n) => {
-      if (n.current.type === food) {
+  nodes.forEach((row) => {
+    row.forEach((n) => {
+      if (n.occupied && n.current.type === food) {
         foodCount++;
-      } else if (n.current.type === creature) {
+      } else if (n.occupied && n.current.type === creature) {
         creatureCount++;
       }
     });
+  });
   return { foodCount, creatureCount };
 };
 
 // access to context states
-export const usePack = () => {
+export const useSim = () => {
   const { state, dispatch } = useContext(SimContext);
   return [state, dispatch];
 };
@@ -74,41 +79,52 @@ export const newSim = (dispatch, height, width) => {
   dispatch({ type: "NEW_SIM", payload: { height, width, nodes } });
 };
 
-export const nextTurn = async (dispatch, nodes) => {
+export const nextTurn = async (dispatch, state) => {
   await dispatch({ type: "NEXT_TURN" });
-  dispatch({ type: "UPDATE_CURRENT_COUNT", payload: getCurrentCounts(nodes) });
+  generateFood(dispatch, state.height, state.width, state.nodes);
+
+  let genCreature = Math.floor(Math.random() * 10);
+  genCreature < 3 &&
+    generateCreatures(dispatch, state.nodes, state.height, state.width);
+  await dispatch({
+    type: "UPDATE_CURRENT_COUNT",
+    payload: getCurrentCounts(state.nodes),
+  });
 };
 
-export const generateCreatures = (
+const generateCreatures = (
   dispatch,
   nodes,
-  amount = nodes.length / 75
+  height,
+  width,
+  amount = (height * width) / 75
 ) => {
   let count = 0;
-  let nodeIndex;
+  let x;
+  let y;
   while (count < amount) {
-    nodeIndex = Math.floor(Math.random() * nodes.length);
-    if (nodes[nodeIndex].occupied) {
+    x = Math.floor(Math.random() * width);
+    y = Math.floor(Math.random() * height);
+    if (nodes[x][y].occupied) {
       continue;
     }
-    const newCreature = {
+
+    let newCreature = {
       type: creature,
       duration: Math.floor(Math.random() * 3 + 8),
-      vision: Math.floor(Math.random() * 2 + 2),
+      vision: width / 5,
       attack: Math.floor(Math.random() * 3 + 8),
       aggression: Math.floor(Math.random() * 3 + 8),
       friendliness: Math.floor(Math.random() * 3 + 8),
       movement: 10,
-      gender: Math.round(Math.random()),
+      possibleActions: [],
     };
-    nodes[nodeIndex].current = newCreature;
-    nodes[nodeIndex].occupied = true;
+    // newCreature = scanMoves(newCreature)
+    nodes[x][y].current = newCreature;
+    nodes[x][y].occupied = true;
     count++;
   }
-  //   console.log(nodes);
   dispatch({ type: "NEW_CREATURES", payload: { nodes, count } });
-
-  //   return nodes;
 };
 
 const SimState = (props) => {

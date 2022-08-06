@@ -1,31 +1,18 @@
 import React, { useState } from "react";
-import {
-  usePack,
-  newSim,
-  generateFood,
-  nextTurn,
-  generateCreatures,
-} from "./context/SimState";
+import { useSim, newSim, nextTurn } from "./context/SimState";
 
 const Sim = () => {
-  const [simState, simDispatch] = usePack();
+  const [simState, simDispatch] = useSim();
   const { running, turn, height, width, nodes, food, creatures } = simState;
 
   // generate new grid
 
   const newGrid = () => {
-    newSim(simDispatch, 10, 10);
+    newSim(simDispatch, 5, 5);
   };
 
-  const newFood = () => {
-    generateFood(simDispatch, height, width, nodes);
-  };
   const newTurn = () => {
-    nextTurn(simDispatch, nodes);
-  };
-
-  const newCreature = () => {
-    generateCreatures(simDispatch, nodes);
+    nextTurn(simDispatch, simState);
   };
 
   const extraGridStyling = running
@@ -35,12 +22,20 @@ const Sim = () => {
       }
     : {};
 
+  const nodeStyling = (node) => {
+    if (!node.occupied) return "";
+    if (node.current.type === "FOOD") {
+      return "green";
+    }
+    if (node.current.type === "CREATURE") {
+      return "red";
+    }
+  };
+
   return (
     <div className="container flex flex-col">
       <div onClick={newGrid}>New Grid</div>
-      <div onClick={newFood}>New Food</div>
       <div onClick={newTurn}>New Turn</div>
-      <div onClick={newCreature}>New Creatures</div>
       <div>
         {food.current} / {food.total} food
       </div>
@@ -54,8 +49,19 @@ const Sim = () => {
         style={extraGridStyling}
       >
         {running &&
-          nodes.map((n, idx) => (
-            <div key={idx}>{n.occupied && n.current.type}</div>
+          nodes.map((row, idx) => (
+            // <div key={idx}>{n.occupied && n.current.type[0]}</div>
+            <div key={idx}>
+              {row.map((node) => (
+                <div
+                  className="grid-item"
+                  key={"" + node.x + node.y}
+                  style={{ backgroundColor: nodeStyling(node) }}
+                >
+                  {node.occupied && "X:" + node.x + ", Y:" + node.y}
+                </div>
+              ))}
+            </div>
           ))}
       </div>
     </div>

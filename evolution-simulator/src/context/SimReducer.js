@@ -40,17 +40,19 @@ const SimReducer = (state, action) => {
       return {
         ...state,
         turn: state.turn + 1,
-        nodes: state.nodes.map((n) => {
-          if (n.occupied && n.current != null) {
-            let newNode = n;
-            newNode.current.duration -= 1;
-            if (newNode.current.duration < 1) {
-              newNode.current = null;
-              newNode.occupied = false;
+        nodes: state.nodes.map((row) => {
+          return row.map((n) => {
+            if (n.occupied && n.current != null) {
+              let newNode = n;
+              newNode.current.duration -= 1;
+              if (newNode.current.duration < 1) {
+                newNode.current = null;
+                newNode.occupied = false;
+              }
+              return newNode;
             }
-            return newNode;
-          }
-          return n;
+            return n;
+          });
         }),
       };
     case "UPDATE_CURRENT_COUNT":
