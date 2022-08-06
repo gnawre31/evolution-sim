@@ -37,7 +37,10 @@ export const generateFood = (
       continue;
     }
     nodes[nodeIndex].occupied = true;
-    const newFood = { type: food, duration: duration };
+    const newFood = {
+      type: food,
+      duration: Math.floor(Math.random() * (duration + 1) + 1),
+    };
     nodes[nodeIndex].current = newFood;
     count++;
   }
