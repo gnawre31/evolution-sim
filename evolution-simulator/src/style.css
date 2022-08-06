@@ -1,0 +1,32 @@
+.container{
+    width:100vw;
+    height:100vh;
+}
+.flex{
+    display: flex;
+    align-items: center;
+}
+.flex-col{
+    flex-direction: column;
+}
+.flex-row{
+    flex-direction: row;
+}
+.align-items{
+    justify-content: center;
+}
+
+.grid{
+    display: grid;
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+    width:70%;
+    height:70%;
+    border-top: 1px solid black;
+    border-left: 1px solid black;
+}
+.grid > div {
+    text-align: center;
+    border-bottom: 1px solid black;
+    border-right: 1px solid black;
+}
