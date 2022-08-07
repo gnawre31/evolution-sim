@@ -6,24 +6,7 @@ import {
   generateFood,
   generateNodes,
 } from "../sim/generation";
-
-const creature = "CREATURE";
-const food = "FOOD";
-
-const getCurrentCounts = (nodes) => {
-  let foodCount = 0;
-  let creatureCount = 0;
-  nodes.forEach((row) => {
-    row.forEach((n) => {
-      if (n.occupied && n.current.type === food) {
-        foodCount++;
-      } else if (n.occupied && n.current.type === creature) {
-        creatureCount++;
-      }
-    });
-  });
-  return { foodCount, creatureCount };
-};
+import { getCurrentCounts, scanMoves } from "../sim/trackers";
 
 // access to context states
 export const useSim = () => {
@@ -68,6 +51,15 @@ export const nextTurn = async (dispatch, state) => {
   });
 
   // getCurrentCounts --> scan and get possible moves
+  state.creatures.creatureNodes.length > 0 &&
+    state.creatures.creatureNodes.forEach((n) => {
+      const possibleActions = scanMoves(state.nodes, n);
+      console.log(possibleActions);
+      dispatch({
+        type: "UPDATE_POSSIBLE_ACTIONS",
+        payload: { x: n.x, y: n.y, possibleActions: possibleActions },
+      });
+    });
 };
 
 const SimState = (props) => {
@@ -80,10 +72,12 @@ const SimState = (props) => {
     food: {
       total: 0,
       current: 0,
+      foodNodes: [],
     },
     creatures: {
       total: 0,
       current: 0,
+      creatureNodes: [],
     },
   };
   const [state, dispatch] = useReducer(simReducer, initialState);

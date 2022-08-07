@@ -77,7 +77,7 @@ export const generateCreatures = (
     nodes[x][y].current = newCreature;
     nodes[x][y].occupied = true;
     count++;
-    nodes[x][y] = scanMoves(nodes, nodes[x][y]);
+    nodes[x][y].current.possibleActions = scanMoves(nodes, nodes[x][y]);
   }
   return { nodes, count };
 };

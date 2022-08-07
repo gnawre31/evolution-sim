@@ -35,11 +35,30 @@ export const scanMoves = (nodes, creatureNode) => {
       possibleNodes.push([i, j]);
     }
   }
-  creatureNode.current.possibleActions = {
+  const possibleActions = {
     possibleNodes,
     possibleFood,
     possibleMate,
     possibleAttack,
   };
-  return creatureNode;
+  return possibleActions;
+};
+
+export const getCurrentCounts = (nodes) => {
+  let foodCount = 0;
+  let creatureCount = 0;
+  let foodNodes = [];
+  let creatureNodes = [];
+  nodes.forEach((row) => {
+    row.forEach((n) => {
+      if (n.occupied && n.current.type === "FOOD") {
+        foodCount++;
+        foodNodes.push(n);
+      } else if (n.occupied && n.current.type === "CREATURE") {
+        creatureCount++;
+        creatureNodes.push(n);
+      }
+    });
+  });
+  return { foodCount, creatureCount, foodNodes, creatureNodes };
 };

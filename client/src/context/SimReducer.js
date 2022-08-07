@@ -11,10 +11,12 @@ const SimReducer = (state, action) => {
         food: {
           current: 0,
           total: 0,
+          foodNodes: [],
         },
         creatures: {
           current: 0,
           total: 0,
+          creatureNodes: [],
         },
         running: true,
       };
@@ -61,11 +63,26 @@ const SimReducer = (state, action) => {
         food: {
           current: action.payload.foodCount,
           total: state.food.total,
+          foodNodes: action.payload.foodNodes,
         },
         creatures: {
           current: action.payload.creatureCount,
           total: state.creatures.total,
+          creatureNodes: action.payload.creatureNodes,
         },
+      };
+    case "UPDATE_POSSIBLE_ACTIONS":
+      return {
+        ...state,
+        nodes: state.nodes.map((row) => {
+          const { x, y, possibleActions } = action.payload;
+          return row.map((n) => {
+            if (n.occupied && n.x === x && n.y === y) {
+              n.current.possibleActions = possibleActions;
+            }
+            return n;
+          });
+        }),
       };
 
     default:
