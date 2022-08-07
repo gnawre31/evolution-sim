@@ -20,32 +20,29 @@ export const generateNodes = (height, width) => {
   return nodes;
 };
 
-export const generateFood = (
-  height,
-  width,
-  nodes,
-  duration = 2,
-  amount = (height * width) / 50
-) => {
+export const generateFood = (state, duration = 2) => {
   let count = 0;
-  let x;
-  let y;
-  amount = Math.floor(Math.random() * amount + 1);
+  const x = Math.floor(Math.random() * state.width);
+  const y = Math.floor(Math.random() * state.height);
+  const amount = Math.floor(
+    (Math.random() * state.height * state.width) / 50 + 1
+  );
   while (count < amount) {
-    x = Math.floor(Math.random() * width);
-    y = Math.floor(Math.random() * height);
-    if (nodes[x][y].occupied) {
+    if (state.nodes[x][y].occupied) {
       continue;
     }
-    nodes[x][y].occupied = true;
+    state.nodes[x][y].occupied = true;
     const newFood = {
       type: "FOOD",
       duration: Math.floor(Math.random() * (duration + 1) + 1),
     };
-    nodes[x][y].current = newFood;
+    state.nodes[x][y].current = newFood;
+    state.food.foodNodes.push(state.nodes[x][y]);
     count++;
   }
-  return { nodes, count };
+  state.food.current += amount;
+  state.food.total += amount;
+  return { state };
 };
 
 export const generateCreatures = (

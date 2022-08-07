@@ -33,10 +33,7 @@ const SimReducer = (state, action) => {
       return {
         ...state,
         nodes: action.payload.nodes,
-        food: {
-          current: state.food.current + action.payload.count,
-          total: state.food.total + action.payload.count,
-        },
+        food: action.payload.food,
       };
     case "NEXT_TURN":
       return {
