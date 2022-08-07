@@ -39,21 +39,19 @@ export const scanMoves = (state) => {
   return state;
 };
 
-export const getCurrentCounts = (nodes) => {
-  let foodCount = 0;
-  let creatureCount = 0;
-  let foodNodes = [];
-  let creatureNodes = [];
-  nodes.forEach((row) => {
+export const getOccupiedNodes = (state) => {
+  state.food.foodNodes = [];
+  state.creatures.creatureNodes = [];
+  state.nodes.forEach((row) => {
     row.forEach((n) => {
-      if (n.occupied && n.current.type === "FOOD") {
-        foodCount++;
-        foodNodes.push(n);
-      } else if (n.occupied && n.current.type === "CREATURE") {
-        creatureCount++;
-        creatureNodes.push(n);
+      if (n.occupied && n.current != null) {
+        if (n.current.type === "FOOD") {
+          state.food.foodNodes.push(n);
+        } else if (n.current.type === "CREATURE") {
+          state.creatures.creatureNodes.push(n);
+        }
       }
     });
   });
-  return { foodCount, creatureCount, foodNodes, creatureNodes };
+  return state;
 };

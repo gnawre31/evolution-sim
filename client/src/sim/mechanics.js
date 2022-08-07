@@ -45,3 +45,13 @@ export const decreaseDuration = (state) => {
 
   return state;
 };
+
+export const moveToEmptyNode = (state, list) => {
+  list.forEach((l) => {
+    state.nodes[l.x][l.y].current = l.creatureNode;
+    state.nodes[l.x][l.y].occupied = true;
+    state.nodes[l.creatureNode.x][l.creatureNode.y].current = null;
+    state.nodes[l.creatureNode.x][l.creatureNode.y].occupied = false;
+  });
+  return state;
+};

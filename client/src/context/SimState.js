@@ -6,7 +6,7 @@ import {
   generateFood,
   generateNodes,
 } from "../sim/generation";
-import { scanMoves } from "../sim/trackers";
+import { getOccupiedNodes, scanMoves } from "../sim/trackers";
 import { decreaseDuration } from "../sim/mechanics";
 
 // access to context states
@@ -38,6 +38,8 @@ export const nextTurn = async (dispatch, state) => {
 
   // scan moves for all creatures
   state = scanMoves(state);
+
+  state = getOccupiedNodes(state);
   dispatch({ type: "UPDATE_ALL", payload: state });
 };
 
