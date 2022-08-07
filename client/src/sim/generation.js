@@ -1,7 +1,4 @@
 // generate a list of nodes and plot on a 2D plane
-
-import { scanMoves } from "./trackers";
-
 // each node contains x,y coordinates, occupied flag, and current object
 export const generateNodes = (height, width) => {
   let nodes = [];
@@ -22,59 +19,58 @@ export const generateNodes = (height, width) => {
 
 export const generateFood = (state, duration = 2) => {
   let count = 0;
-  const x = Math.floor(Math.random() * state.width);
-  const y = Math.floor(Math.random() * state.height);
+
   const amount = Math.floor(
     (Math.random() * state.height * state.width) / 50 + 1
   );
+
   while (count < amount) {
+    const x = Math.floor(Math.random() * state.width);
+    const y = Math.floor(Math.random() * state.height);
     if (state.nodes[x][y].occupied) {
       continue;
     }
-    state.nodes[x][y].occupied = true;
+
     const newFood = {
       type: "FOOD",
       duration: Math.floor(Math.random() * (duration + 1) + 1),
     };
+    state.nodes[x][y].occupied = true;
     state.nodes[x][y].current = newFood;
     state.food.foodNodes.push(state.nodes[x][y]);
     count++;
   }
-  state.food.current += amount;
-  state.food.total += amount;
-  return { state };
+  state.food.current += count;
+  state.food.total += count;
+  return state;
 };
 
-export const generateCreatures = (
-  nodes,
-  height,
-  width,
-  amount = (height * width) / 75
-) => {
+export const generateCreatures = (state) => {
   let count = 0;
-  let x;
-  let y;
+  let amount = (state.height * state.width) / 75;
   while (count < amount) {
-    x = Math.floor(Math.random() * width);
-    y = Math.floor(Math.random() * height);
-    if (nodes[x][y].occupied) {
+    const x = Math.floor(Math.random() * state.width);
+    const y = Math.floor(Math.random() * state.height);
+    if (state.nodes[x][y].occupied) {
       continue;
     }
 
     let newCreature = {
       type: "CREATURE",
       duration: Math.floor(Math.random() * 3 + 8),
-      vision: Math.floor(width / 5),
+      vision: Math.floor(state.width / 5),
       attack: Math.floor(Math.random() * 3 + 8),
       aggression: Math.floor(Math.random() * 3 + 8),
       friendliness: Math.floor(Math.random() * 3 + 8),
       movement: 10,
       possibleActions: {},
     };
-    nodes[x][y].current = newCreature;
-    nodes[x][y].occupied = true;
+    state.nodes[x][y].occupied = true;
+    state.nodes[x][y].current = newCreature;
+    state.creatures.creatureNodes.push(state.nodes[x][y]);
     count++;
-    nodes[x][y].current.possibleActions = scanMoves(nodes, nodes[x][y]);
   }
-  return { nodes, count };
+  state.creatures.current += count;
+  state.creatures.total += count;
+  return state;
 };
