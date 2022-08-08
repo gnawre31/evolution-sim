@@ -1,4 +1,7 @@
 // generate a list of nodes and plot on a 2D plane
+
+import { randIntBetween } from "./calculation";
+
 // each node contains x,y coordinates, occupied flag, and current object
 export const generateNodes = (height, width) => {
   let nodes = [];
@@ -17,7 +20,7 @@ export const generateNodes = (height, width) => {
   return nodes;
 };
 
-export const generateFood = (state, duration = 2) => {
+export const generateFood = (state) => {
   let count = 0;
 
   const amount = Math.floor(
@@ -25,15 +28,15 @@ export const generateFood = (state, duration = 2) => {
   );
 
   while (count < amount) {
-    const x = Math.floor(Math.random() * state.width);
-    const y = Math.floor(Math.random() * state.height);
+    const x = randIntBetween(0, state.width - 1);
+    const y = randIntBetween(0, state.height - 1);
     if (state.nodes[x][y].occupied) {
       continue;
     }
 
     const newFood = {
       type: "FOOD",
-      duration: Math.floor(Math.random() * (duration + 1) + 1),
+      duration: randIntBetween(1, 3),
     };
     state.nodes[x][y].occupied = true;
     state.nodes[x][y].current = newFood;
@@ -47,22 +50,21 @@ export const generateFood = (state, duration = 2) => {
 
 export const generateCreatures = (state) => {
   let count = 0;
-  let amount = (state.height * state.width) / 75;
+  let amount = Math.floor(state.height * state.width) / 60;
   while (count < amount) {
-    const x = Math.floor(Math.random() * state.width);
-    const y = Math.floor(Math.random() * state.height);
+    const x = randIntBetween(0, state.width - 1);
+    const y = randIntBetween(0, state.height - 1);
     if (state.nodes[x][y].occupied) {
       continue;
     }
 
     let newCreature = {
       type: "CREATURE",
-      duration: Math.floor(Math.random() * 3 + 8),
+      duration: randIntBetween(9, 12),
       vision: Math.floor(state.width / 5),
-      attack: Math.floor(Math.random() * 3 + 8),
-      aggression: Math.floor(Math.random() * 3 + 8),
-      friendliness: Math.floor(Math.random() * 3 + 8),
-      movement: 10,
+      attack: randIntBetween(9, 12),
+      aggression: randIntBetween(9, 12),
+      friendliness: randIntBetween(9, 12),
       possibleActions: {},
     };
     state.nodes[x][y].occupied = true;
