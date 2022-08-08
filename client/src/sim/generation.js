@@ -1,6 +1,11 @@
 // generate a list of nodes and plot on a 2D plane
 
-import { randIntBetween } from "./calculation";
+import {
+  randInt,
+  randIntBetween,
+  targetCreatureGen,
+  targetFoodGen,
+} from "./calculation";
 
 // each node contains x,y coordinates, occupied flag, and current object
 export const generateNodes = (size) => {
@@ -23,7 +28,7 @@ export const generateNodes = (size) => {
 export const generateFood = (state) => {
   let count = 0;
 
-  const amount = Math.floor((Math.random() * state.size * state.size) / 50 + 1);
+  const amount = randInt(targetFoodGen(state.size));
 
   while (count < amount) {
     const x = randIntBetween(0, state.size - 1);
@@ -48,7 +53,7 @@ export const generateFood = (state) => {
 
 export const generateCreatures = (state) => {
   let count = 0;
-  let amount = Math.floor(Math.pow(state.size * state.size, 1 / 4)) - 1;
+  let amount = randInt(targetCreatureGen(state.size));
   while (count < amount) {
     const x = randIntBetween(0, state.size - 1);
     const y = randIntBetween(0, state.size - 1);

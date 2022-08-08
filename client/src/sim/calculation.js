@@ -1,19 +1,22 @@
 export const randIntBetween = (start, end) => {
-  return Math.floor(Math.random() * (end - start + 1) + start);
+  if (start !== end) {
+    return Math.floor(Math.random() * (end - start + 1) + start);
+  }
+  return start;
 };
 
 export const randInt = (target) => {
   return randIntBetween(minus10Pct(target), plus10Pct(target));
 };
 
-//3 * LOG10( size^2 )^2 - 2
+// 2 * LOG10( size^2 )^2 - 1
 export const targetFoodGen = (size) => {
-  return Math.floor(3 * Math.pow(Math.log(Math.pow(size, 2)), 2)) - 2;
+  return Math.floor(2 * Math.pow(Math.log10(Math.pow(size, 2)), 2)) - 1;
 };
 
-// (size^2) ^ (0.25) - 1
+// (size^2) ^ (0.2) - 1
 export const targetCreatureGen = (size) => {
-  return Math.floor(Math.pow(Math.pow(size, 2), 1 / 4)) - 1;
+  return Math.floor(Math.pow(Math.pow(size, 2), 0.2)) - 1;
 };
 
 const plus10Pct = (target) => {
