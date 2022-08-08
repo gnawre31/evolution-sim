@@ -16,9 +16,9 @@ export const useSim = () => {
 };
 
 // starts new simulation
-export const newSim = (dispatch, height, width) => {
-  const nodes = generateNodes(height, width);
-  dispatch({ type: "NEW_SIM", payload: { height, width, nodes } });
+export const newSim = (dispatch, size) => {
+  const nodes = generateNodes(size);
+  dispatch({ type: "NEW_SIM", payload: { size, nodes } });
 };
 
 export const nextTurn = async (dispatch, state) => {
@@ -47,8 +47,7 @@ const SimState = (props) => {
   const initialState = {
     running: false,
     turn: 0,
-    height: 0,
-    width: 0,
+    size: 0,
     nodes: [],
     food: {
       total: 0,

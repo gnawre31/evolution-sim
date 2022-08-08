@@ -4,8 +4,7 @@ const SimReducer = (state, action) => {
       return {
         ...state,
         nodes: action.payload.nodes,
-        height: action.payload.height,
-        width: action.payload.width,
+        size: action.payload.size,
         food: {
           current: 0,
           total: 0,

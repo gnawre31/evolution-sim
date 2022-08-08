@@ -3,12 +3,12 @@ import { useSim, newSim, nextTurn } from "./context/SimState";
 
 const Sim = () => {
   const [simState, simDispatch] = useSim();
-  const { running, turn, height, width, nodes, food, creatures } = simState;
+  const { running, turn, size, nodes, food, creatures } = simState;
 
   // generate new grid
 
   const newGrid = () => {
-    newSim(simDispatch, 15, 15);
+    newSim(simDispatch, 15);
   };
 
   const newTurn = () => {
@@ -17,8 +17,8 @@ const Sim = () => {
 
   const extraGridStyling = running
     ? {
-        gridTemplateColumns: `repeat(${width},1fr)`,
-        gridTemplateRows: `repeat(${height},1fr)`,
+        gridTemplateColumns: `repeat(${size},1fr)`,
+        gridTemplateRows: `repeat(${size},1fr)`,
       }
     : {};
 

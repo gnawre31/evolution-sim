@@ -3,11 +3,11 @@
 import { randIntBetween } from "./calculation";
 
 // each node contains x,y coordinates, occupied flag, and current object
-export const generateNodes = (height, width) => {
+export const generateNodes = (size) => {
   let nodes = [];
-  for (let i = 0; i < width; i++) {
+  for (let i = 0; i < size; i++) {
     let row = [];
-    for (let j = 0; j < height; j++) {
+    for (let j = 0; j < size; j++) {
       row.push({
         x: i,
         y: j,
@@ -23,13 +23,11 @@ export const generateNodes = (height, width) => {
 export const generateFood = (state) => {
   let count = 0;
 
-  const amount = Math.floor(
-    (Math.random() * state.height * state.width) / 50 + 1
-  );
+  const amount = Math.floor((Math.random() * state.size * state.size) / 50 + 1);
 
   while (count < amount) {
-    const x = randIntBetween(0, state.width - 1);
-    const y = randIntBetween(0, state.height - 1);
+    const x = randIntBetween(0, state.size - 1);
+    const y = randIntBetween(0, state.size - 1);
     if (state.nodes[x][y].occupied) {
       continue;
     }
@@ -50,10 +48,10 @@ export const generateFood = (state) => {
 
 export const generateCreatures = (state) => {
   let count = 0;
-  let amount = Math.floor(state.height * state.width) / 60;
+  let amount = Math.floor(state.size * state.size) / 100;
   while (count < amount) {
-    const x = randIntBetween(0, state.width - 1);
-    const y = randIntBetween(0, state.height - 1);
+    const x = randIntBetween(0, state.size - 1);
+    const y = randIntBetween(0, state.size - 1);
     if (state.nodes[x][y].occupied) {
       continue;
     }
@@ -61,7 +59,7 @@ export const generateCreatures = (state) => {
     let newCreature = {
       type: "CREATURE",
       duration: randIntBetween(9, 12),
-      vision: Math.floor(state.width / 5),
+      vision: Math.floor(state.size / 5),
       attack: randIntBetween(9, 12),
       aggression: randIntBetween(9, 12),
       friendliness: randIntBetween(9, 12),

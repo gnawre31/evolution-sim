@@ -6,8 +6,8 @@ export const scanMoves = (state) => {
     let maxY = c.y + c.current.vision;
     minX = minX < 0 ? 0 : minX;
     minY = minY < 0 ? 0 : minY;
-    maxX = maxX > state.width - 1 ? state.width - 1 : maxX;
-    maxY = maxY > state.height - 1 ? state.height - 1 : maxY;
+    maxX = maxX > state.size - 1 ? state.size - 1 : maxX;
+    maxY = maxY > state.size - 1 ? state.size - 1 : maxY;
     let possibleNodes = [];
     let possibleFood = [];
     let possibleMate = [];
