@@ -48,7 +48,7 @@ export const generateFood = (state) => {
 
 export const generateCreatures = (state) => {
   let count = 0;
-  let amount = Math.floor(state.size * state.size) / 100;
+  let amount = Math.floor(Math.pow(state.size * state.size, 1 / 4)) - 1;
   while (count < amount) {
     const x = randIntBetween(0, state.size - 1);
     const y = randIntBetween(0, state.size - 1);

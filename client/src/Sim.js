@@ -8,7 +8,7 @@ const Sim = () => {
   // generate new grid
 
   const newGrid = () => {
-    newSim(simDispatch, 15);
+    newSim(simDispatch, 100);
   };
 
   const newTurn = () => {
@@ -56,7 +56,11 @@ const Sim = () => {
                 <div
                   className="grid-item"
                   key={"" + node.x + node.y}
-                  style={{ backgroundColor: nodeStyling(node) }}
+                  style={{
+                    backgroundColor: nodeStyling(node),
+                    height: "100%",
+                    width: "100%",
+                  }}
                 >
                   {/* {node.occupied && "X:" + node.x + ", Y:" + node.y} */}
                 </div>
